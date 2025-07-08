@@ -404,13 +404,12 @@ class DOGame {
                 if (this.mapData[y][x] >= 999) {
                     // 空きマスが見つかった場合、移動可能位置として追加
                     validMoves.push({ x, y });
-                    // ★空きマスの先も探索を続ける（障害物がなければどこまでも）
-                    x += dir.dx;
-                    y += dir.dy;
                 } else {
                     // タイルがある場合は、その方向への移動を停止
                     break;
                 }
+                x += dir.dx;
+                y += dir.dy;
             }
         });
         
@@ -484,11 +483,6 @@ class DOGame {
                 this.heldTile = { ...tile };
                 this.heldTileMousePos = [cx, cy];
                 this.selectedTileValue = tile.value;
-                
-                // ★デバッグ: 移動可能位置をコンソールに出力
-                const validMoves = this.getValidMoves(tile.x, tile.y);
-                console.log(`タイル (${tile.x}, ${tile.y}) の移動可能位置:`, validMoves);
-                
                 this.drawGame();
             } else {
                 this.selectedTileValue = null;
@@ -500,8 +494,6 @@ class DOGame {
                 // ★移動可能位置をチェック
                 const validMoves = this.getValidMoves(this.heldTile.x, this.heldTile.y);
                 const isValidMove = validMoves.some(move => move.x === emptyTile.x && move.y === emptyTile.y);
-                
-                console.log(`移動先 (${emptyTile.x}, ${emptyTile.y}) は有効か:`, isValidMove);
                 
                 if (isValidMove) {
                     const sx = this.heldTile.x, sy = this.heldTile.y;
