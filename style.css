@@ -983,6 +983,11 @@ body {
     border-radius: 12px;
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .ad-placeholder {
@@ -1079,9 +1084,15 @@ body {
     border-color: rgba(255, 193, 7, 0.2);
 }
 
-.stuck-ad::before {
+.stuck-ad-2 {
+    margin: 15px auto;
+    background: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.stuck-ad-2::before {
+    content: "広告 - まだチャンスはある！";
     color: #ffc107;
-    content: "広告 - 次回は頑張って！";
 }
 
 /* 忍者AdMax レスポンシブ広告の調整 */
@@ -1122,10 +1133,6 @@ body {
 
 /* PC用広告の最適化 */
 @media (min-width: 769px) {
-    .ad-container {
-        max-width: 728px;
-    }
-    
     .ad-container iframe {
         width: 728px;
         height: 90px;
@@ -1134,13 +1141,11 @@ body {
 
 /* スマホ用広告の最適化 */
 @media (max-width: 768px) {
-    .ad-container {
-        max-width: 320px;
-    }
-    
     .ad-container iframe {
-        width: 320px;
-        height: 50px;
+        width: 320px !important;
+        height: 50px !important;
+        max-width: 320px !important;
+        max-height: 50px !important;
     }
 }
 
