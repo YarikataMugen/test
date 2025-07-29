@@ -384,12 +384,13 @@ body {
 
 .game-info {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 40px;
+    align-items: center;
+    width: 100%;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    padding: 10px;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(52, 73, 94, 0.8));
-    padding: 20px 30px;
     border-radius: 15px;
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.3),
@@ -577,29 +578,535 @@ body {
     text-shadow: 0 0 15px rgba(64, 207, 255, 0.5);
 }
 
+/* 手数表示のスタイル */
+#moveCounter {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-left: 20px;
+}
+
+/* ゲーム情報エリアの調整 */
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(52, 73, 94, 0.8));
+    border-radius: 15px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 4px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 400px;
+}
+
+/* 統計表示の調整 */
 .stats-container {
     display: flex;
-    justify-content: space-around;
-    margin: 30px 0;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
+    gap: 30px;
+    margin: 20px 0;
+    justify-content: center;
 }
 
 .stat-item {
     text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    min-width: 120px;
 }
 
 .stat-value {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #40CFFF;
     display: block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
 }
 
 .stat-label {
+    display: block;
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 5px;
+    color: #7f8c8d;
+    text-transform: uppercase;
+}
+
+.map-area {
+        display: flex;
+        flex-direction: row; /* 横方向に拡張 */
+        align-items: flex-start; /* 上揃え */
+        justify-content: flex-start; /* 左揃え */
+        position: relative; /* 絶対位置調整用 */
+    }
+    canvas {
+        margin-right: 10px; /* マップ間の余白 */
+    }
+
+
+    .piece {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #888;
+        margin: 4px;
+        text-align: center;
+        line-height: 36px;
+        background: #eee;
+        cursor: pointer;
+        transition: background 0.3s, box-shadow 0.3s;
+    }
+    .piece.highlight {
+        background: #f39c12; /* ハイライト色 */
+        box-shadow: 0 0 10px #f39c12;
+    }
+    .sidebar {
+        flex-shrink: 0; /* サイズが縮まないように固定 */
+    }
+
+/* ★記録表のスタイル */
+.records-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.records-content h2 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.records-table-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.records-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.records-table thead {
+    background: linear-gradient(135deg, #40CFFF 0%, #5555FF 100%);
+    color: white;
+}
+
+.records-table th {
+    padding: 15px 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.records-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+.records-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.records-table tbody tr:nth-child(even) {
+    background-color: #f1f3f4;
+}
+
+.level-cell {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.cleared-cell {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.not-cleared-cell {
+    color: #95a5a6;
+    font-style: italic;
+}
+
+.record-cell {
+    font-family: 'Courier New', monospace;
+    color: #34495e;
+}
+
+.best-record {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    font-weight: bold;
+    color: #2d3436;
+}
+
+.records-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.danger-button {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.danger-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.danger-button:active {
+    transform: translateY(0);
+}
+
+/* ★レスポンシブ対応 */
+@media (max-width: 768px) {
+    .records-table {
+        font-size: 0.9rem;
+    }
+    
+    .records-table th,
+    .records-table td {
+        padding: 8px 5px;
+    }
+    
+    .records-content h2 {
+        font-size: 2rem;
+    }
+    
+    .records-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .records-table {
+        font-size: 0.8rem;
+    }
+    
+    .records-table th,
+    .records-table td {
+        padding: 6px 3px;
+    }
+}
+
+/* 広告コンテナのスタイル */
+.ad-container {
+    text-align: center;
+    margin: 20px auto;
+    padding: 15px;
+    max-width: 728px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ad-placeholder {
+    padding: 20px;
+    background: rgba(64, 207, 255, 0.1);
+    border: 2px dashed rgba(64, 207, 255, 0.3);
+    border-radius: 8px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.ad-container::before {
+    content: "広告";
+    display: block;
+    font-size: 0.7rem;
+    color: #999;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 各位置の調整 */
+.top-ad {
+    margin: 20px auto 30px auto;
+}
+
+.menu-bottom-ad {
+    margin: 30px auto 20px auto;
+}
+
+.game-bottom-ad {
+    margin: 20px auto;
+}
+
+.clear-ad {
+    margin: 20px auto;
+    background: rgba(64, 207, 255, 0.1);
+    border-color: rgba(64, 207, 255, 0.2);
+}
+
+.records-bottom-ad {
+    margin: 30px auto 20px auto;
+}
+
+/* 忍者AdMax レスポンシブ広告の調整 */
+
+/* プレースホルダーを隠す */
+.ad-placeholder {
+    display: none !important;
+}
+
+/* PC/スマホ広告の切り替え */
+.pc-ad {
+    display: block;
+}
+
+.mobile-ad {
+    display: none;
+}
+
+/* 768px以下でスマホ広告に切り替え */
+@media (max-width: 768px) {
+    .pc-ad {
+        display: none;
+    }
+    
+    .mobile-ad {
+        display: block;
+    }
+}
+
+/* 忍者AdMax広告フレームの調整 */
+.ad-container iframe {
+    border-radius: 8px;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+/* PC用広告の最適化 */
+@media (min-width: 769px) {
+    .ad-container {
+        max-width: 728px;
+    }
+    
+    .ad-container iframe {
+        width: 728px;
+        height: 90px;
+    }
+}
+
+/* スマホ用広告の最適化 */
+@media (max-width: 768px) {
+    .ad-container {
+        max-width: 320px;
+    }
+    
+    .ad-container iframe {
+        width: 320px;
+        height: 50px;
+    }
+}
+
+/* 広告ラベルの再調整 */
+.ad-container::before {
+    content: "広告";
+    display: block;
+    font-size: 0.7rem;
+    color: #999;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* 各広告位置の微調整 */
+.top-ad {
+    margin: 20px auto 30px auto;
+}
+
+.game-bottom-ad {
+    margin: 20px auto;
+}
+
+.clear-ad {
+    margin: 20px auto;
+    background: rgba(64, 207, 255, 0.1);
+    border-color: rgba(64, 207, 255, 0.2);
+}
+
+.clear-ad::before {
+    color: #40CFFF;
+}
+
+.records-bottom-ad {
+    margin: 30px auto 20px auto;
+}
+
+/* ★新規追加: リタイヤ・詰んだ確認画面の広告スタイル */
+.retire-ad {
+    margin: 20px auto;
+    background: rgba(231, 76, 60, 0.1);
+    border-color: rgba(231, 76, 60, 0.2);
+}
+
+.retire-ad::before {
+    color: #e74c3c;
+    content: "広告 - 気分転換にどうぞ";
+}
+
+.stuck-ad {
+    margin: 20px auto;
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.2);
+}
+
+.stuck-ad::before {
+    color: #ffc107;
+    content: "広告 - 次回は頑張って！";
+}
+
+/* 広告読み込み中のスタイル */
+.ad-container {
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 広告が読み込まれていない場合のプレースホルダー */
+.ad-container:empty::after {
+    content: "広告読み込み中...";
+    color: #999;
+    font-size: 0.8rem;
+    padding: 20px;
+}
+
+/* 超小型デバイス対応 */
+@media (max-width: 480px) {
+    .ad-container {
+        margin: 10px auto;
+        padding: 8px;
+        max-width: 300px;
+    }
+    
+    .ad-container iframe {
+        width: 300px;
+        height: 50px;
+    }
+}
+
+/* タブレット用調整 */
+@media (min-width: 481px) and (max-width: 768px) {
+    .ad-container iframe {
+        width: 320px;
+        height: 50px;
+    }
+}
+
+/* 既存のstyle.cssの最後に追加 */
+
+/* ポリシーページ用スタイル */
+.policy-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: white;
+    line-height: 1.6;
+}
+
+.policy-container h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-size: 2.5rem;
+}
+
+.policy-container h2 {
+    color: #fff;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+    padding-bottom: 8px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.policy-container p {
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.policy-container ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.policy-container li {
+    margin-bottom: 8px;
+}
+
+.policy-dates {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.back-link .menu-button {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.back-link .menu-button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .policy-container {
+        padding: 20px 15px;
+    }
+    
+    .policy-container h1 {
+        font-size: 2rem;
+    }
+    
+    .policy-container h2 {
+        font-size: 1.2rem;
+    }
 }
