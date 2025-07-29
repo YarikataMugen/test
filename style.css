@@ -155,6 +155,7 @@ body {
     }
 }
 
+/* 超小型デバイス（480px以下）の調整 */
 @media (max-width: 480px) {
     .title-container {
         top: 5px !important; /* ★さらに小さい画面では5pxに配置 */
@@ -802,14 +803,173 @@ body {
     }
 }
 
-@media (max-width: 480px) {
-    .records-table {
-        font-size: 0.8rem;
+/* ★スマホ版広告の修正 */
+@media (max-width: 768px) {
+    /* タイトル下の広告を適切に配置 */
+    .top-ad {
+        margin: 120px auto 20px auto !important; /* タイトル分の余白を確保 */
+        position: relative !important; /* 固定位置を解除 */
+        z-index: 100 !important; /* タイトルより下に配置 */
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
     }
     
-    .records-table th,
-    .records-table td {
-        padding: 6px 3px;
+    /* メニューコンテンツの調整 */
+    .menu-content {
+        margin-top: 20px !important; /* 広告分の余白を追加 */
+        position: relative !important;
+        z-index: 500 !important;
+    }
+    
+    /* 全ての広告コンテナのスクロール対策 */
+    .ad-container {
+        position: relative !important; /* fixed解除 */
+        transform: none !important; /* transform解除 */
+        margin: 15px auto !important;
+        padding: 10px !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        
+        /* オーバーレイ効果を削除 */
+        backdrop-filter: none !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 8px !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    /* 広告iframe自体の調整 */
+    .ad-container iframe {
+        width: 100% !important;
+        max-width: 320px !important;
+        height: 50px !important;
+        position: relative !important; /* 固定位置解除 */
+        display: block !important;
+        margin: 0 auto !important;
+        border-radius: 5px !important;
+    }
+    
+    /* PC広告を完全に隠す */
+    .pc-ad {
+        display: none !important;
+    }
+    
+    /* スマホ広告のみ表示 */
+    .mobile-ad {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+
+/* 超小型デバイス（480px以下）の調整 */
+@media (max-width: 480px) {
+    .top-ad {
+        margin: 100px auto 15px auto !important; /* より狭い画面用 */
+    }
+    
+    .menu-content {
+        margin-top: 15px !important;
+    }
+    
+    .ad-container {
+        margin: 10px auto !important;
+        padding: 8px !important;
+    }
+    
+    .ad-container iframe {
+        max-width: 300px !important;
+        height: 50px !important;
+    }
+}
+
+/* ★ゲーム画面での広告調整 */
+@media (max-width: 768px) {
+    .game-bottom-ad {
+        position: relative !important;
+        margin: 20px auto !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .clear-ad {
+        position: relative !important;
+        margin: 20px auto !important;
+        background: rgba(64, 207, 255, 0.1) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .records-bottom-ad {
+        position: relative !important;
+        margin: 20px auto !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .retire-ad {
+        position: relative !important;
+        margin: 20px auto !important;
+        background: rgba(231, 76, 60, 0.1) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .stuck-ad {
+        position: relative !important;
+        margin: 20px auto !important;
+        background: rgba(255, 193, 7, 0.1) !important;
+        backdrop-filter: none !important;
+    }
+}
+
+/* ★広告ラベルのスマホ調整 */
+@media (max-width: 768px) {
+    .ad-container::before {
+        font-size: 0.6rem !important;
+        color: #666 !important;
+        margin-bottom: 5px !important;
+        text-align: center !important;
+    }
+    
+    .retire-ad::before {
+        content: "広告" !important; /* 長いメッセージを短縮 */
+        color: #e74c3c !important;
+    }
+    
+    .stuck-ad::before {
+        content: "広告" !important; /* 長いメッセージを短縮 */
+        color: #ffc107 !important;
+    }
+    
+    .clear-ad::before {
+        color: #40CFFF !important;
+    }
+}
+
+/* ★スクロール時の広告固定化防止 */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden !important; /* 横スクロール防止 */
+    }
+    
+    .screen.active {
+        position: relative !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        overflow-y: auto !important; /* 縦スクロール許可 */
+        padding-bottom: 20px !important; /* 下部余白 */
+    }
+    
+    /* 全体的なz-index調整 */
+    .title-container {
+        z-index: 1000 !important; /* 最上位 */
+    }
+    
+    .ad-container {
+        z-index: 100 !important; /* 中間 */
+    }
+    
+    .menu-content {
+        z-index: 500 !important; /* タイトルと広告の間 */
     }
 }
 
