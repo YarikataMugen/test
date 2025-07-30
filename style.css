@@ -924,6 +924,16 @@ body {
         margin: 20px auto !important;
         background: rgba(231, 76, 60, 0.1) !important;
         backdrop-filter: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 15px !important;
+        max-width: 728px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(231, 76, 60, 0.2) !important;
+        min-height: 60px !important;
     }
     
     /* ★stuck-ad のスマホ版対応（重要） */
@@ -932,6 +942,16 @@ body {
         margin: 20px auto !important;
         background: rgba(255, 193, 7, 0.1) !important;
         backdrop-filter: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 15px !important;
+        max-width: 728px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 193, 7, 0.2) !important;
+        min-height: 60px !important;
     }
 }
 
@@ -1378,6 +1398,15 @@ body {
         margin: 20px auto !important;
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 15px !important;
+        max-width: 728px !important;
+        border-radius: 12px !important;
+        min-height: 60px !important;
     }
     
     .game-bottom-ad-2 {
@@ -1385,6 +1414,15 @@ body {
         margin: 15px auto !important;
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 15px !important;
+        max-width: 728px !important;
+        border-radius: 12px !important;
+        min-height: 60px !important;
     }
     
     .clear-ad-2 {
@@ -1392,41 +1430,50 @@ body {
         margin: 15px auto !important;
         background: rgba(64, 207, 255, 0.1) !important;
         backdrop-filter: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        padding: 15px !important;
+        max-width: 728px !important;
+        border-radius: 12px !important;
+        min-height: 60px !important;
     }
     
     .retire-ad-2 {
-        text-align: center;
+        text-align: center !important;
         position: relative !important;
         margin: 15px auto !important;
-        padding: 15px;
-        max-width: 728px;
+        padding: 15px !important;
+        max-width: 728px !important;
         background: rgba(231, 76, 60, 0.1) !important;
-        border-radius: 12px;
+        border-radius: 12px !important;
         backdrop-filter: none !important;
-        border: 1px solid rgba(231, 76, 60, 0.3);
-        min-height: 60px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        border: 1px solid rgba(231, 76, 60, 0.3) !important;
+        min-height: 60px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
     /* ★stuck-ad-2 のスマホ版対応（重要） */
     .stuck-ad-2 {
-        text-align: center;
+        text-align: center !important;
         position: relative !important;
         margin: 15px auto !important;
-        padding: 15px;
-        max-width: 728px;
+        padding: 15px !important;
+        max-width: 728px !important;
         background: rgba(255, 193, 7, 0.1) !important;
-        border-radius: 12px;
+        border-radius: 12px !important;
         backdrop-filter: none !important;
-        border: 1px solid rgba(255, 193, 7, 0.3);
-        min-height: 60px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        border: 1px solid rgba(255, 193, 7, 0.3) !important;
+        min-height: 60px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
     /* 新規追加広告のラベル調整 */
