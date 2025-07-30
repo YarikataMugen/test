@@ -824,12 +824,18 @@ body {
     
     /* 全ての広告コンテナのスクロール対策 */
     .ad-container {
+        text-align: center;
         position: relative !important; /* fixed解除 */
         transform: none !important; /* transform解除 */
         margin: 15px auto !important;
         padding: 10px !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
+        min-height: 60px;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
         
         /* オーバーレイ効果を削除 */
         backdrop-filter: none !important;
@@ -873,8 +879,15 @@ body {
     }
     
     .ad-container {
+        text-align: center;
         margin: 10px auto !important;
         padding: 8px !important;
+        max-width: 300px;
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
     .ad-container iframe {
@@ -965,10 +978,6 @@ body {
         z-index: 1000 !important; /* 最上位 */
     }
     
-    .ad-container {
-        z-index: 100 !important; /* 中間 */
-    }
-    
     .menu-content {
         z-index: 500 !important; /* タイトルと広告の間 */
     }
@@ -989,6 +998,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 
 .ad-placeholder {
@@ -1078,6 +1088,11 @@ body {
     align-items: center;
 }
 
+.retire-ad::before {
+    content: "広告";
+    color: #e74c3c;
+}
+
 .retire-ad-2 {
     text-align: center;
     margin: 15px auto;
@@ -1113,6 +1128,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.stuck-ad::before {
+    content: "広告";
+    color: #ffc107;
 }
 
 .stuck-ad-2 {
@@ -1225,71 +1245,9 @@ body {
     margin: 30px auto 20px auto;
 }
 
-/* ★新規追加: リタイヤ・詰んだ確認画面の広告スタイル */
-.retire-ad {
-    margin: 20px auto;
-    background: rgba(231, 76, 60, 0.1);
-    border-color: rgba(231, 76, 60, 0.2);
-}
+/* 忍者AdMax レスポンシブ広告の調整 */
 
-.retire-ad::before {
-    color: #e74c3c;
-    content: "広告";
-}
-
-.stuck-ad {
-    margin: 20px auto;
-    background: rgba(255, 193, 7, 0.1);
-    border-color: rgba(255, 193, 7, 0.2);
-}
-
-.stuck-ad::before {
-    color: #ffc107;
-    content: "広告";
-}
-
-/* 広告読み込み中のスタイル */
-.ad-container {
-    min-height: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 広告が読み込まれていない場合のプレースホルダー */
-.ad-container:empty::after {
-    content: "広告読み込み中...";
-    color: #999;
-    font-size: 0.8rem;
-    padding: 20px;
-}
-
-/* 超小型デバイス対応 */
-@media (max-width: 480px) {
-    .ad-container {
-        margin: 10px auto;
-        padding: 8px;
-        max-width: 300px;
-    }
-    
-    .ad-container iframe {
-        width: 300px;
-        height: 50px;
-    }
-}
-
-/* タブレット用調整 */
-@media (min-width: 481px) and (max-width: 768px) {
-    .ad-container iframe {
-        width: 320px;
-        height: 50px;
-    }
-}
-
-/* 既存のstyle.cssの最後に追加 */
-
-/* ポリシーページ用スタイル */
+/* プレースホルダーを隠す */
 .policy-container {
     max-width: 800px;
     margin: 0 auto;
