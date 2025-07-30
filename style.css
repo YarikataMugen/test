@@ -1063,9 +1063,19 @@ body {
 }
 
 .retire-ad {
+    text-align: center;
     margin: 20px auto;
+    padding: 15px;
+    max-width: 728px;
     background: rgba(231, 76, 60, 0.1);
-    border-color: rgba(231, 76, 60, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .retire-ad-2 {
@@ -1081,6 +1091,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .retire-ad-2::before {
@@ -1089,9 +1100,19 @@ body {
 }
 
 .stuck-ad {
+    text-align: center;
     margin: 20px auto;
+    padding: 15px;
+    max-width: 728px;
     background: rgba(255, 193, 7, 0.1);
-    border-color: rgba(255, 193, 7, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .stuck-ad-2 {
@@ -1107,6 +1128,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .stuck-ad-2::before {
@@ -1423,6 +1445,7 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
     }
     
     /* ★stuck-ad-2 のスマホ版対応（重要） */
@@ -1440,6 +1463,7 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
     }
     
     /* 新規追加広告のラベル調整 */
