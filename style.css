@@ -1022,7 +1022,7 @@ body {
 }
 
 .menu-bottom-ad::before {
-    content: "広告 - ゲームを楽しもう！";
+    content: "広告";
     color: #40CFFF;
 }
 
@@ -1037,7 +1037,7 @@ body {
 }
 
 .game-bottom-ad-2::before {
-    content: "広告 - プレイ中の休憩に";
+    content: "広告";
     color: #34495e;
 }
 
@@ -1054,7 +1054,7 @@ body {
 }
 
 .clear-ad-2::before {
-    content: "広告 - クリアおめでとう！";
+    content: "広告";
     color: #40CFFF;
 }
 
@@ -1075,7 +1075,7 @@ body {
 }
 
 .retire-ad-2::before {
-    content: "広告 - 次は頑張って！";
+    content: "広告";
     color: #e74c3c;
 }
 
@@ -1092,7 +1092,7 @@ body {
 }
 
 .stuck-ad-2::before {
-    content: "広告 - まだチャンスはある！";
+    content: "広告";
     color: #ffc107;
 }
 
@@ -1194,7 +1194,7 @@ body {
 
 .retire-ad::before {
     color: #e74c3c;
-    content: "広告 - 気分転換にどうぞ";
+    content: "広告";
 }
 
 .stuck-ad {
@@ -1205,7 +1205,7 @@ body {
 
 .stuck-ad::before {
     color: #ffc107;
-    content: "広告 - 次回は頑張って！";
+    content: "広告";
 }
 
 /* 広告読み込み中のスタイル */
@@ -1342,7 +1342,7 @@ body {
 }
 
 .menu-bottom-ad::before {
-    content: "広告 - ゲームを楽しもう！";
+    content: "広告";
     color: #40CFFF;
 }
 
@@ -1353,7 +1353,7 @@ body {
 }
 
 .game-bottom-ad-2::before {
-    content: "広告 - プレイ中の休憩に";
+    content: "広告";
     color: #34495e;
 }
 
@@ -1364,7 +1364,7 @@ body {
 }
 
 .clear-ad-2::before {
-    content: "広告 - クリアおめでとう！";
+    content: "広告";
     color: #40CFFF;
 }
 
@@ -1375,7 +1375,7 @@ body {
 }
 
 .retire-ad-2::before {
-    content: "広告 - 次は頑張って！";
+    content: "広告";
     color: #e74c3c;
 }
 
@@ -1387,7 +1387,7 @@ body {
 }
 
 .stuck-ad-2::before {
-    content: "広告 - まだチャンスはある！";
+    content: "広告";
     color: #ffc107;
 }
 
