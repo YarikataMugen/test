@@ -913,6 +913,7 @@ body {
         backdrop-filter: none !important;
     }
     
+    /* ★stuck-ad のスマホ版対応（重要） */
     .stuck-ad {
         position: relative !important;
         margin: 20px auto !important;
@@ -1330,5 +1331,128 @@ body {
     
     .policy-container h2 {
         font-size: 1.2rem;
+    }
+}
+
+/* ★新規追加広告のスタイル修正 */
+.menu-bottom-ad {
+    margin: 30px auto 20px auto;
+    background: rgba(64, 207, 255, 0.05);
+    border-color: rgba(64, 207, 255, 0.1);
+}
+
+.menu-bottom-ad::before {
+    content: "広告 - ゲームを楽しもう！";
+    color: #40CFFF;
+}
+
+.game-bottom-ad-2 {
+    margin: 15px auto;
+    background: rgba(52, 73, 94, 0.1);
+    border-color: rgba(52, 73, 94, 0.2);
+}
+
+.game-bottom-ad-2::before {
+    content: "広告 - プレイ中の休憩に";
+    color: #34495e;
+}
+
+.clear-ad-2 {
+    margin: 15px auto;
+    background: rgba(64, 207, 255, 0.15);
+    border-color: rgba(64, 207, 255, 0.3);
+}
+
+.clear-ad-2::before {
+    content: "広告 - クリアおめでとう！";
+    color: #40CFFF;
+}
+
+.retire-ad-2 {
+    margin: 15px auto;
+    background: rgba(231, 76, 60, 0.15);
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+.retire-ad-2::before {
+    content: "広告 - 次は頑張って！";
+    color: #e74c3c;
+}
+
+/* ★stuck-ad-2 の追加（重要） */
+.stuck-ad-2 {
+    margin: 15px auto;
+    background: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.stuck-ad-2::before {
+    content: "広告 - まだチャンスはある！";
+    color: #ffc107;
+}
+
+/* ★スマホ版での新規広告調整（重要） */
+@media (max-width: 768px) {
+    .menu-bottom-ad {
+        position: relative !important;
+        margin: 20px auto !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .game-bottom-ad-2 {
+        position: relative !important;
+        margin: 15px auto !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .clear-ad-2 {
+        position: relative !important;
+        margin: 15px auto !important;
+        background: rgba(64, 207, 255, 0.1) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .retire-ad-2 {
+        position: relative !important;
+        margin: 15px auto !important;
+        background: rgba(231, 76, 60, 0.1) !important;
+        backdrop-filter: none !important;
+    }
+    
+    /* ★stuck-ad-2 のスマホ版対応（重要） */
+    .stuck-ad-2 {
+        position: relative !important;
+        margin: 15px auto !important;
+        background: rgba(255, 193, 7, 0.1) !important;
+        backdrop-filter: none !important;
+    }
+    
+    /* 新規追加広告のラベル調整 */
+    .menu-bottom-ad::before {
+        content: "広告" !important;
+        color: #40CFFF !important;
+    }
+    
+    .game-bottom-ad-2::before {
+        content: "広告" !important;
+        color: #666 !important;
+    }
+    
+    .clear-ad-2::before {
+        content: "広告" !important;
+        color: #40CFFF !important;
+    }
+    
+    .retire-ad-2::before {
+        content: "広告" !important;
+        color: #e74c3c !important;
+    }
+    
+    /* ★stuck-ad-2 のラベル調整（重要） */
+    .stuck-ad-2::before {
+        content: "広告" !important;
+        color: #ffc107 !important;
     }
 }
