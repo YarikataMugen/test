@@ -1248,6 +1248,11 @@ body {
 /* 忍者AdMax レスポンシブ広告の調整 */
 
 /* プレースホルダーを隠す */
+.ad-placeholder {
+    display: none !important;
+}
+
+/* ポリシーページ用スタイル */
 .policy-container {
     max-width: 800px;
     margin: 0 auto;
