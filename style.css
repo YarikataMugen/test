@@ -1386,29 +1386,6 @@ body {
     color: #40CFFF;
 }
 
-.retire-ad-2 {
-    margin: 15px auto;
-    background: rgba(231, 76, 60, 0.15);
-    border-color: rgba(231, 76, 60, 0.3);
-}
-
-.retire-ad-2::before {
-    content: "広告";
-    color: #e74c3c;
-}
-
-/* ★stuck-ad-2 の追加（重要） */
-.stuck-ad-2 {
-    margin: 15px auto;
-    background: rgba(255, 193, 7, 0.2);
-    border-color: rgba(255, 193, 7, 0.3);
-}
-
-.stuck-ad-2::before {
-    content: "広告";
-    color: #ffc107;
-}
-
 /* ★スマホ版での新規広告調整（重要） */
 @media (max-width: 768px) {
     .menu-bottom-ad {
@@ -1433,18 +1410,36 @@ body {
     }
     
     .retire-ad-2 {
+        text-align: center;
         position: relative !important;
         margin: 15px auto !important;
+        padding: 15px;
+        max-width: 728px;
         background: rgba(231, 76, 60, 0.1) !important;
+        border-radius: 12px;
         backdrop-filter: none !important;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     /* ★stuck-ad-2 のスマホ版対応（重要） */
     .stuck-ad-2 {
+        text-align: center;
         position: relative !important;
         margin: 15px auto !important;
+        padding: 15px;
+        max-width: 728px;
         background: rgba(255, 193, 7, 0.1) !important;
+        border-radius: 12px;
         backdrop-filter: none !important;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     /* 新規追加広告のラベル調整 */
