@@ -22,6 +22,14 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     position: relative;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#ageSelectScreen.active {
+    display: flex;
 }
 
 #ageSelectScreen::before {
@@ -40,6 +48,9 @@ body {
     position: relative;
     z-index: 10;
     text-align: center;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
 }
 
 .age-select-content {
@@ -51,9 +62,7 @@ body {
     color: #fff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(255, 255, 255, 0.2);
-    max-width: 600px;
-    width: 90%;
-    margin: 30px auto 0;
+    margin: 0 auto;
 }
 
 .age-select-content h2 {
@@ -267,6 +276,79 @@ body {
     
     .age-title {
         font-size: 1.3rem;
+    }
+}
+
+/* PC大画面向けスタイル */
+@media (min-width: 1024px) {
+    .age-select-content {
+        padding: 60px;
+        max-width: 900px;
+    }
+    
+    .age-select-content h2 {
+        font-size: 3rem;
+        margin-bottom: 30px;
+    }
+    
+    .age-description {
+        font-size: 1.4rem;
+        margin-bottom: 50px;
+    }
+    
+    .age-button-container {
+        gap: 40px;
+        margin: 50px 0;
+    }
+    
+    .age-button {
+        min-width: 220px;
+        padding: 35px 30px;
+    }
+    
+    .age-icon {
+        font-size: 3.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .age-title {
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+    }
+    
+    .age-subtitle {
+        font-size: 1rem;
+    }
+    
+    .timer-setting {
+        padding: 30px;
+        margin: 40px 0 30px 0;
+    }
+    
+    .timer-setting h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    .timer-toggle {
+        font-size: 1.2rem;
+    }
+    
+    .toggle-slider {
+        width: 70px;
+        height: 35px;
+        margin-right: 20px;
+    }
+    
+    .toggle-slider::before {
+        width: 27px;
+        height: 27px;
+        top: 2px;
+        left: 2px;
+    }
+    
+    .timer-toggle input:checked + .toggle-slider::before {
+        transform: translateX(35px);
     }
 }
 
