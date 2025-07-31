@@ -17,6 +17,259 @@ body {
     justify-content: center;
 }
 
+/* 年齢層選択画面 */
+#ageSelectScreen {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+#ageSelectScreen::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: float 20s linear infinite;
+}
+
+.age-select-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.age-select-content {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    max-width: 600px;
+    width: 90%;
+    margin: 30px auto 0;
+}
+
+.age-select-content h2 {
+    color: #40CFFF;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(64, 207, 255, 0.5);
+}
+
+.age-description {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+}
+
+.age-button-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.age-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    text-align: center;
+    min-width: 200px;
+    backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.age-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.age-button:hover::before {
+    left: 100%;
+}
+
+.age-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.age-button.senior-child:hover {
+    border-color: rgba(76, 175, 80, 0.8);
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+}
+
+.age-button.adult:hover {
+    border-color: rgba(255, 152, 0, 0.8);
+    box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3);
+}
+
+.age-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.age-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.age-subtitle {
+    font-size: 1rem;
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+.age-note {
+    background: rgba(64, 207, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 40px;
+    border: 1px solid rgba(64, 207, 255, 0.2);
+}
+
+.age-note p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* タイマー設定エリア */
+.timer-setting {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 30px 0 20px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.timer-setting h3 {
+    color: #40CFFF;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.timer-toggle-container {
+    text-align: center;
+}
+
+.timer-toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.timer-toggle input {
+    display: none;
+}
+
+.toggle-slider {
+    width: 60px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    position: relative;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.timer-toggle input:checked + .toggle-slider {
+    background: linear-gradient(135deg, #40CFFF, #5555FF);
+    border-color: #40CFFF;
+}
+
+.timer-toggle input:checked + .toggle-slider::before {
+    transform: translateX(30px);
+}
+
+.timer-toggle:hover .toggle-slider {
+    box-shadow: 0 0 20px rgba(64, 207, 255, 0.3);
+}
+
+.timer-description {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 5px 0 0 0;
+}
+
+/* 設定ボタンのスタイル */
+.settings-btn {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad) !important;
+}
+
+.settings-btn:hover {
+    background: linear-gradient(135deg, #8e44ad, #7d3c98) !important;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .age-select-content {
+        padding: 30px 20px;
+    }
+    
+    .age-select-content h2 {
+        font-size: 2rem;
+    }
+    
+    .age-button-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .age-button {
+        min-width: 250px;
+        padding: 25px 20px;
+    }
+    
+    .age-icon {
+        font-size: 2.5rem;
+    }
+    
+    .age-title {
+        font-size: 1.3rem;
+    }
+}
+
 /* メインメニュー */
 #mainMenu {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1269,6 +1522,17 @@ body {
 
 /* プレースホルダーを隠す */
 .ad-placeholder {
+    display: none !important;
+}
+
+/* 年齢層による広告制御 */
+.ad-container.hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.ad-container.safe-mode {
+    /* シニア・子供向けの安全モード */
     display: none !important;
 }
 

@@ -18,12 +18,131 @@ class DOGame {
         this.moveCount = 0;
         this.timerElement = null;
         this.moveCountElement = null; // 手数表示用
+        
+        // ★年齢層管理を追加
+        this.ageGroup = null; // 'adult', 'senior-child'
+        this.adsEnabled = false; // 広告表示フラグ
+        
+        // ★タイマー設定管理を追加
+        this.timerEnabled = true; // タイマーON/OFF設定
+        this.gameTimer = null; // タイマーのインターバルID
+        this.isTimerRunning = false; // タイマー動作状態
+        
         this.initializeElements();
         this.setupEventListeners();
+        
+        // ★即座に年齢選択を初期化（DOM要素の初期状態を保持）
+        this.initializeAgeSelection();
+    }
+    
+    // ★年齢選択の初期化
+    initializeAgeSelection() {
+        console.log('年齢選択初期化開始');
+        
+        // 要素の存在確認
+        const ageSelectScreen = document.getElementById('ageSelectScreen');
+        const mainMenuScreen = document.getElementById('mainMenu');
+        
+        if (!ageSelectScreen || !mainMenuScreen) {
+            console.error('年齢選択画面またはメインメニュー画面が見つかりません');
+            return;
+        }
+        
+        // ローカルストレージから設定を読み込み
+        const savedAgeGroup = localStorage.getItem('gameAgeGroup');
+        const savedTimerEnabled = localStorage.getItem('gameTimerEnabled');
+        
+        console.log('保存された年齢層設定:', savedAgeGroup);
+        console.log('保存されたタイマー設定:', savedTimerEnabled);
+        
+        // タイマー設定を復元
+        if (savedTimerEnabled !== null) {
+            this.timerEnabled = savedTimerEnabled === 'true';
+            if (this.elements.timerEnabled) {
+                this.elements.timerEnabled.checked = this.timerEnabled;
+            }
+        }
+        
+        if (savedAgeGroup) {
+            this.setAgeGroup(savedAgeGroup);
+            console.log('保存された設定でメインメニューへ');
+            // ★少し遅延させてから画面切り替え
+            setTimeout(() => {
+                this.showMainMenu();
+            }, 50);
+        } else {
+            console.log('初回訪問: 年齢選択画面を維持');
+            // ★初回訪問時は現在のHTML状態（年齢選択画面がactive）を維持
+            // 何もしない（HTMLで既にageSelectScreenがactiveになっている）
+        }
+    }
+    
+    // ★年齢層を設定
+    setAgeGroup(ageGroup) {
+        this.ageGroup = ageGroup;
+        this.adsEnabled = (ageGroup === 'adult');
+        
+        // ローカルストレージに保存
+        localStorage.setItem('gameAgeGroup', ageGroup);
+        
+        // 広告の表示/非表示を制御
+        this.controlAdDisplay();
+        
+        console.log(`年齢層設定: ${ageGroup}, 広告表示: ${this.adsEnabled}`);
+    }
+    
+    // ★デバッグ用：年齢設定をリセット
+    resetAgeSelection() {
+        localStorage.removeItem('gameAgeGroup');
+        localStorage.removeItem('gameTimerEnabled');
+        this.ageGroup = null;
+        this.adsEnabled = false;
+        this.timerEnabled = true;
+        console.log('年齢設定をリセットしました');
+        location.reload(); // ページをリロード
+    }
+    
+    // ★タイマー設定を変更
+    setTimerEnabled(enabled) {
+        this.timerEnabled = enabled;
+        localStorage.setItem('gameTimerEnabled', enabled.toString());
+        console.log(`タイマー設定: ${enabled ? 'ON' : 'OFF'}`);
+        
+        // ゲーム中の場合、タイマー表示を即座に更新
+        if (this.screens.game.classList.contains('active')) {
+            this.updateTimerDisplay();
+        }
+    }
+    
+    // ★広告の表示制御
+    controlAdDisplay() {
+        const adContainers = document.querySelectorAll('.ad-container');
+        
+        adContainers.forEach(container => {
+            if (this.adsEnabled) {
+                container.style.display = 'flex';
+                container.style.visibility = 'visible';
+            } else {
+                container.style.display = 'none';
+                container.style.visibility = 'hidden';
+            }
+        });
+    }
+    
+    // ★年齢選択画面を表示
+    showAgeSelection() {
+        console.log('年齢選択画面を表示');
+        this.showScreen('ageSelect');
+    }
+    
+    // ★メインメニューを表示
+    showMainMenu() {
+        this.showScreen('mainMenu');
     }
     
     initializeElements() {
         this.screens = {
+            ageSelect: document.getElementById('ageSelectScreen'), // ★追加
             mainMenu: document.getElementById('mainMenu'),
             rules: document.getElementById('rulesScreen'),
             game: document.getElementById('gameScreen'),
@@ -34,6 +153,14 @@ class DOGame {
         };
         
         this.elements = {
+            // ★年齢選択関連の要素
+            seniorChildButton: document.getElementById('seniorChildButton'),
+            adultButton: document.getElementById('adultButton'),
+            settingsButton: document.getElementById('settingsButton'),
+            
+            // ★タイマー設定の要素
+            timerEnabled: document.getElementById('timerEnabled'),
+            
             levelSelect: document.getElementById('levelSelect'),
             playButton: document.getElementById('playButton'),
             rulesButton: document.getElementById('rulesButton'),
@@ -54,7 +181,11 @@ class DOGame {
             recordsButton: document.getElementById('recordsButton'),
             backToMenuFromRecords: document.getElementById('backToMenuFromRecords'),
             clearRecordsButton: document.getElementById('clearRecordsButton'),
-            recordsTableBody: document.getElementById('recordsTableBody')
+            recordsTableBody: document.getElementById('recordsTableBody'),
+            // ★年齢選択ボタンを追加
+            ageAdult: document.getElementById('ageAdult'),
+            ageSenior: document.getElementById('ageSenior'),
+            ageChild: document.getElementById('ageChild')
         };
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
@@ -77,6 +208,26 @@ class DOGame {
     }
     
     setupEventListeners() {
+        // ★年齢選択のイベントリスナー
+        this.elements.seniorChildButton.addEventListener('click', () => {
+            this.setAgeGroup('senior-child');
+            this.showMainMenu();
+        });
+        
+        this.elements.adultButton.addEventListener('click', () => {
+            this.setAgeGroup('adult');
+            this.showMainMenu();
+        });
+        
+        this.elements.settingsButton.addEventListener('click', () => {
+            this.showAgeSelection();
+        });
+        
+        // ★タイマー設定のイベントリスナー
+        this.elements.timerEnabled.addEventListener('change', (e) => {
+            this.setTimerEnabled(e.target.checked);
+        });
+        
         this.elements.playButton.addEventListener('click', () => this.startGame());
         this.elements.rulesButton.addEventListener('click', () => this.showRules());
         this.elements.closeRulesButton.addEventListener('click', () => this.showMainMenu());
@@ -110,19 +261,32 @@ class DOGame {
     }
     
     showScreen(screenName) {
+        console.log('画面切り替え:', screenName);
+        
         Object.values(this.screens).forEach(screen => {
-            if (screen) screen.classList.remove('active');
+            if (screen) {
+                screen.classList.remove('active');
+            }
         });
         
         if (this.screens[screenName]) {
             this.screens[screenName].classList.add('active');
+            console.log('画面表示成功:', screenName);
+        } else {
+            console.error('画面が見つかりません:', screenName, 'Available screens:', Object.keys(this.screens));
         }
         
         if (screenName !== 'game' && this.canvas && this.ctx) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
+        
+        // ★画面切り替え時に広告制御を実行（年齢選択画面以外）
+        if (this.ageGroup && screenName !== 'ageSelect') {
+            this.controlAdDisplay();
+        }
     }
     
+    // ★メインメニューを表示（年齢選択後）
     showMainMenu() { 
         this.showScreen('mainMenu'); 
         this.resetGame(); 
@@ -180,6 +344,7 @@ class DOGame {
         this.generateDiamondMap();
         this.setupCanvas();
         this.drawGame();
+        this.updateTimerDisplay(); // タイマー表示を更新
     }
     
     generateDiamondMap() {
@@ -683,6 +848,10 @@ class DOGame {
     }
     
     startTimer() {
+        if (!this.timerEnabled) {
+            this.updateTimerDisplay();
+            return;
+        }
         this.startTime = Date.now();
         this.elements.timer.textContent = `Time: 0s`;
         this.timerInterval = setInterval(() => {
@@ -691,7 +860,15 @@ class DOGame {
         }, 1000);
     }
     
-    stopTimer() { if (this.timerInterval) clearInterval(this.timerInterval); }
+    stopTimer() { 
+        if (this.timerInterval) clearInterval(this.timerInterval); 
+    }
+    
+    updateTimerDisplay() {
+        if (this.elements.timer) {
+            this.elements.timer.style.display = this.timerEnabled ? 'block' : 'none';
+        }
+    }
     
     endGame() {
         // クリア時間を設定

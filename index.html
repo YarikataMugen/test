@@ -9,8 +9,54 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 年齢層選択画面 -->
+    <div id="ageSelectScreen" class="screen active">
+        <div class="age-select-container">
+            <div class="title-container">
+                <h1 class="game-title">ソロエル&ツム</h1>
+            </div>
+            
+            <div class="age-select-content">
+                <h2>🎯 ユーザー層を選択してください</h2>
+                <p class="age-description">あなたの年齢層に適したゲーム体験を提供します</p>
+                
+                <div class="age-button-container">
+                    <button id="seniorChildButton" class="age-button senior-child">
+                        <div class="age-icon">👶👴</div>
+                        <div class="age-title">シニア・お子様</div>
+                        <div class="age-subtitle">広告なしで安心</div>
+                    </button>
+                    
+                    <button id="adultButton" class="age-button adult">
+                        <div class="age-icon">👨‍💼👩‍💼</div>
+                        <div class="age-title">成人</div>
+                        <div class="age-subtitle">広告表示でサポート</div>
+                    </button>
+                </div>
+                
+                <!-- ★タイマー設定を追加 -->
+                <div class="timer-setting">
+                    <h3>⏰ タイマー設定</h3>
+                    <div class="timer-toggle-container">
+                        <label class="timer-toggle">
+                            <input type="checkbox" id="timerEnabled" checked>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-text">タイマー表示</span>
+                        </label>
+                        <p class="timer-description">ゲーム中のタイマー表示をON/OFFできます</p>
+                    </div>
+                </div>
+                
+                <div class="age-note">
+                    <p>💡 この設定は保存され、次回以降は自動的に適用されます</p>
+                    <p>いつでも設定画面から変更可能です</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- メインメニュー -->
-    <div id="mainMenu" class="screen active">
+    <div id="mainMenu" class="screen">
         <div class="title-container">
             <h1 class="game-title">ソロエル&ツム</h1>
         </div>
@@ -49,6 +95,7 @@
                 <button id="playButton" class="menu-button">プレイ</button>
                 <button id="rulesButton" class="menu-button">ルール</button>
                 <button id="recordsButton" class="menu-button">📊 記録</button>
+                <button id="settingsButton" class="menu-button settings-btn">⚙️ 設定</button>
             </div>
             
             <div class="copyright-notice">
