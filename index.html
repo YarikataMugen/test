@@ -2,7 +2,10 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>ソロエル&ツム - 無料パズルゲーム</title>
     <meta name="description" content="無料で遊べるダイヤモンド型パズルゲーム。同じ数字を隣接させてクリアを目指そう！">
     <!-- メインメニュー <meta name="keywords" content="パズルゲーム,無料ゲーム,ブラウザゲーム,数字パズル,ソロエル,ツム">-->
@@ -74,6 +77,9 @@
         <div class="menu-content">
             <h2>Level</h2>
             <select id="levelSelect">
+                <option value="create1">Create1</option>
+                <option value="create2">Create2</option>
+                <option value="create3">Create3</option>
                 <option value="0" selected>1</option>
                 <option value="1">2</option>
                 <option value="2">3</option>
@@ -93,6 +99,7 @@
             </div>
             <div class="button-container">
                 <button id="playButton" class="menu-button">プレイ</button>
+                <button id="createButton" class="menu-button">🎨 クリエイト</button>
                 <button id="rulesButton" class="menu-button">ルール</button>
                 <button id="recordsButton" class="menu-button">📊 記録</button>
                 <button id="settingsButton" class="menu-button settings-btn">⚙️ 設定</button>

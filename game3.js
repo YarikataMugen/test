@@ -1,6 +1,6 @@
 class DOGame {
     constructor() {
-        this.selectedLevel = 3; // ★デフォルトレベル3（1+2）
+        this.selectedLevel = 0; // ★デフォルトレベル1（HTML value="0"）
         this.mapData = [];
         this.mouseRuRu = [];
         this.boardSize = 0;
@@ -163,6 +163,7 @@ class DOGame {
             
             levelSelect: document.getElementById('levelSelect'),
             playButton: document.getElementById('playButton'),
+            createButton: document.getElementById('createButton'),
             rulesButton: document.getElementById('rulesButton'),
             closeRulesButton: document.getElementById('closeRulesButton'),
             gameRulesButton: document.getElementById('gameRulesButton'),
@@ -229,13 +230,22 @@ class DOGame {
         });
         
         this.elements.playButton.addEventListener('click', () => this.startGame());
+        this.elements.createButton.addEventListener('click', () => this.openCreatePage());
         this.elements.rulesButton.addEventListener('click', () => this.showRules());
         this.elements.closeRulesButton.addEventListener('click', () => this.showMainMenu());
         this.elements.gameRulesButton.addEventListener('click', () => this.showRules());
         this.elements.retireButton.addEventListener('click', () => this.showRetireConfirm());
         this.elements.backToMenuButton.addEventListener('click', () => this.showMainMenu());
         this.elements.levelSelect.addEventListener('change', (e) => {
-            this.selectedLevel = parseInt(e.target.value) + 3;
+            const value = e.target.value;
+            if (value === 'custom') {
+                this.selectedLevel = 'custom';
+            } else if (['create1', 'create2', 'create3'].includes(value)) {
+                this.selectedLevel = value; // create1, create2, create3をそのまま設定
+            } else {
+                this.selectedLevel = parseInt(value); // HTMLの値をそのまま保存（0, 1, 2, ...）
+            }
+            console.log('レベル選択されました:', this.selectedLevel);
         });
         this.elements.colorMode.addEventListener('change', (e) => {
             this.colorMode = e.target.checked;
@@ -244,6 +254,15 @@ class DOGame {
             }
         });
         this.canvas.addEventListener('click', (e) => this.onCanvasClick(e));
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('click', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            this.canvas.dispatchEvent(mouseEvent);
+        });
         this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
 
         // リタイヤ確認画面のボタンイベント
@@ -319,19 +338,39 @@ class DOGame {
     }
 
     startGame() {
-        if (this.selectedLevel === 0 || this.selectedLevel < 3) {
-            alert('レベルを選択してください');
-            return;
+        console.log('startGame開始 - 選択されたレベル:', this.selectedLevel);
+        
+        // Createレベルの場合、カスタムパズルの確認
+        if (['create1', 'create2', 'create3'].includes(this.selectedLevel)) {
+            console.log('Createレベルが選択されました:', this.selectedLevel);
+            const customPuzzleData = localStorage.getItem(this.selectedLevel);
+            console.log('保存されたデータ:', customPuzzleData);
+            if (!customPuzzleData) {
+                console.error(`${this.selectedLevel}のデータが見つかりません`);
+                alert(`${this.selectedLevel.toUpperCase()}に保存されたパズルが見つかりません。先にクリエイトでパズルを作成してください。`);
+                return;
+            } else {
+                console.log('createマップデータが見つかりました、ゲームを開始します');
+            }
         }
+        
+        console.log('ゲーム画面を表示します');
         this.showScreen('game');
+        console.log('ゲームを初期化します');
         this.initializeGame();
+        console.log('タイマーを開始します');
         this.startTimer();
         
         // レベル1の場合のみルールボタンを表示
-        const currentLevel = this.selectedLevel - 2;
-        if (currentLevel === 1) {
-            this.elements.gameRulesButton.style.display = 'inline-block';
+        if (!['create1', 'create2', 'create3'].includes(this.selectedLevel)) {
+            const currentLevel = parseInt(this.selectedLevel) + 1;
+            if (currentLevel === 1) {
+                this.elements.gameRulesButton.style.display = 'inline-block';
+            } else {
+                this.elements.gameRulesButton.style.display = 'none';
+            }
         } else {
+            // Createレベルの場合はルールボタンを非表示
             this.elements.gameRulesButton.style.display = 'none';
         }
         
@@ -340,15 +379,76 @@ class DOGame {
     }
     
     initializeGame() {
-        this.boardSize = this.selectedLevel;
-        this.generateDiamondMap();
+        // Createレベルまたはカスタムパズルの確認
+        const useCustomPuzzle = localStorage.getItem('useCustomPuzzle') === 'true';
+        let customPuzzleData = null;
+        
+        console.log('ゲーム初期化開始 - レベル:', this.selectedLevel, 'カスタムパズル使用:', useCustomPuzzle);
+        
+        if (['create1', 'create2', 'create3'].includes(this.selectedLevel)) {
+            console.log('Createレベルが選択されました:', this.selectedLevel);
+            customPuzzleData = localStorage.getItem(this.selectedLevel);
+            console.log(`${this.selectedLevel}データ:`, customPuzzleData);
+            if (!customPuzzleData) {
+                console.error(`${this.selectedLevel}のデータが見つかりません`);
+            } else {
+                console.log('createマップデータが見つかりました、解析中...');
+                try {
+                    const parsedData = JSON.parse(customPuzzleData);
+                    console.log('解析されたデータ:', parsedData);
+                    console.log('データのサイズ:', parsedData.size);
+                    console.log('データのボード:', parsedData.board);
+                    customPuzzleData = parsedData; // 解析済みデータを設定
+                } catch (error) {
+                    console.error('データの解析に失敗:', error);
+                    customPuzzleData = null;
+                }
+            }
+        } else if (useCustomPuzzle) {
+            customPuzzleData = localStorage.getItem('customPuzzle');
+            console.log('カスタムパズルデータ:', customPuzzleData);
+        }
+        
+        if (customPuzzleData) {
+            console.log('カスタムパズルデータを読み込みます');
+            // customPuzzleDataがすでにオブジェクトの場合はそのまま使用、文字列の場合はパース
+            const puzzleDataToLoad = typeof customPuzzleData === 'string' ? JSON.parse(customPuzzleData) : customPuzzleData;
+            this.loadCustomPuzzle(puzzleDataToLoad);
+            // カスタムパズル使用後はフラグをクリア
+            localStorage.removeItem('useCustomPuzzle');
+        } else if (['create1', 'create2', 'create3'].includes(this.selectedLevel)) {
+            console.error(`${this.selectedLevel}のパズルデータが見つかりません`);
+            alert(`${this.selectedLevel.toUpperCase()}に保存されたパズルが見つかりません。先にクリエイトでパズルを作成してください。`);
+            return;
+        } else {
+            console.log('通常のレベル', this.selectedLevel, 'でゲームを開始');
+            this.boardSize = parseInt(this.selectedLevel) + 3; // レベル0→3、レベル1→4、etc.
+            this.generateDiamondMap();
+        }
+        
         this.setupCanvas();
         this.drawGame();
         this.updateTimerDisplay(); // タイマー表示を更新
+        
+        // ★通常レベルでも隣接チェックを実行
+        if (!['create1', 'create2', 'create3'].includes(this.selectedLevel)) {
+            setTimeout(() => {
+                this.performInitialAdjacencyCheckAndFix();
+            }, 100);
+        }
     }
     
     generateDiamondMap() {
-        const N = this.boardSize;
+        let N = this.boardSize;
+        
+        // boardSizeの値をチェック
+        if (!N || N <= 0 || isNaN(N)) {
+            console.error('無効なboardSize:', N);
+            this.boardSize = 3; // デフォルト値を設定
+            N = this.boardSize;
+        }
+        
+        console.log('ダイヤモンドマップを生成中、サイズ:', N);
         this.mapData = Array(N).fill().map(() => Array(N).fill(999));
         this.mouseRuRu = Array(N).fill().map(() => Array(N).fill(0));
         this.tiles = [];
@@ -365,6 +465,45 @@ class DOGame {
         lowerVals = lowerVals.sort(() => Math.random() - 0.5);
         upperPos.forEach(([x, y], idx) => { this.mapData[y][x] = upperVals[idx]; });
         lowerPos.forEach(([x, y], idx) => { this.mapData[y][x] = lowerVals[idx]; });
+    }
+    
+    loadCustomPuzzle(puzzleData) {
+        console.log('loadCustomPuzzle開始 - カスタムパズルを読み込み:', puzzleData);
+        
+        this.boardSize = puzzleData.size;
+        console.log('ボードサイズ設定:', this.boardSize);
+        
+        this.mapData = Array(this.boardSize).fill().map(() => Array(this.boardSize).fill(999));
+        this.mouseRuRu = Array(this.boardSize).fill().map(() => Array(this.boardSize).fill(0));
+        this.tiles = [];
+        
+        console.log('マップデータ初期化完了');
+        
+        let pieceCount = 0;
+        // カスタムパズルのボードデータを変換
+        for (let y = 0; y < this.boardSize; y++) {
+            for (let x = 0; x < this.boardSize; x++) {
+                if (puzzleData.board[y] && puzzleData.board[y][x]) {
+                    this.mapData[y][x] = puzzleData.board[y][x].value;
+                    pieceCount++;
+                    console.log(`駒配置: (${x}, ${y}) = ${puzzleData.board[y][x].value}`);
+                } else {
+                    this.mapData[y][x] = 999; // 空のセル
+                }
+            }
+        }
+        
+        console.log(`駒の配置完了 - 配置された駒数: ${pieceCount}`);
+        
+        // 色モードの設定
+        this.colorMode = puzzleData.colorMode !== false;
+        
+        console.log('カスタムパズル読み込み完了 - サイズ:', this.boardSize, '色モード:', this.colorMode);
+        
+        // ★カスタムパズル読み込み後に隣接チェックを実行
+        setTimeout(() => {
+            this.performInitialAdjacencyCheckAndFix();
+        }, 100);
     }
     
     setupCanvas() {
@@ -389,7 +528,18 @@ class DOGame {
                 screenY: this.centerY + (x + y) * s / 2,
                 value: this.mapData[y][x]
             });
+        
+        // ★既存のtilesのisFixed状態を保持
+        const oldTiles = this.tiles || [];
         this.tiles = this.ms.filter(cell => cell.value < 999);
+        
+        // 既存のisFixed状態を新しいtilesに復元
+        this.tiles.forEach(newTile => {
+            const oldTile = oldTiles.find(old => old.x === newTile.x && old.y === newTile.y);
+            if (oldTile && oldTile.isFixed) {
+                newTile.isFixed = true;
+            }
+        });
 
         if (this.canvasScale === undefined) {
             const maxW = window.innerWidth;
@@ -608,11 +758,12 @@ class DOGame {
     // ★移動可能な位置を取得する関数（直線上の空きマスを全て検索）
     getValidMoves(startX, startY) {
         const validMoves = [];
+        // UI上の斜め方向（移動可能方向）= 配列上の上下左右
         const directions = [
-            { dx: 0, dy: -1 }, // 上
-            { dx: 1, dy: 0 },  // 右
-            { dx: 0, dy: 1 },  // 下
-            { dx: -1, dy: 0 }  // 左
+            { dx: -1, dy: 0 }, // 上
+            { dx: 1, dy: 0 },  // 下
+            { dx: 0, dy: -1 }, // 左
+            { dx: 0, dy: 1 }   // 右
         ];
         
         directions.forEach(dir => {
@@ -665,6 +816,19 @@ class DOGame {
         this.ctx.globalAlpha = tile.isHeld ? 0.7 : 1;
         this.ctx.fill(); this.ctx.globalAlpha = 1;
         
+        // ★固定駒の金色光るエフェクト（前回の方式）
+        if (tile.isFixed) {
+            this.ctx.save();
+            const time = Date.now() / 400;
+            const opacity = (Math.sin(time) + 1) / 2 * 0.6 + 0.4;
+            this.ctx.strokeStyle = `rgba(255, 215, 0, ${opacity})`;
+            this.ctx.lineWidth = 8;
+            this.ctx.shadowColor = `rgba(255, 215, 0, ${opacity})`;
+            this.ctx.shadowBlur = 20;
+            this.ctx.stroke();
+            this.ctx.restore();
+        }
+        
         if (highlight) {
             this.ctx.save();
             this.ctx.strokeStyle = "#40CFFF";
@@ -674,10 +838,15 @@ class DOGame {
             this.ctx.stroke();
             this.ctx.restore();
         }
-        if (this.mouseRuRu[tile.y][tile.x] === 1) { this.ctx.strokeStyle = '#FFD700'; this.ctx.lineWidth = 3; }
-        else if (tile.isHeld) { this.ctx.strokeStyle = '#FF3333'; this.ctx.lineWidth = 4; }
-        else { this.ctx.strokeStyle = '#333'; this.ctx.lineWidth = 2; }
-        this.ctx.stroke();
+        
+        // 通常の枠線描画（固定駒以外）
+        if (!tile.isFixed) {
+            if (this.mouseRuRu[tile.y][tile.x] === 1) { this.ctx.strokeStyle = '#FFD700'; this.ctx.lineWidth = 3; }
+            else if (tile.isHeld) { this.ctx.strokeStyle = '#FF3333'; this.ctx.lineWidth = 4; }
+            else { this.ctx.strokeStyle = '#333'; this.ctx.lineWidth = 2; }
+            this.ctx.stroke();
+        }
+        
         this.ctx.fillStyle = this.colorMode ? "#222" : "#333";
         this.ctx.font = `bold ${this.tileSize / 2.3}px Arial`;
         this.ctx.textAlign = 'center'; this.ctx.textBaseline = 'middle';
@@ -685,7 +854,123 @@ class DOGame {
         this.ctx.restore();
     }
     
+    // ゲーム開始後の隣接チェックと固定処理
+    performInitialAdjacencyCheckAndFix() {
+        if (!this.mapData) {
+            console.log('mapDataが存在しません');
+            return;
+        }
+        
+        const adjacentPairs = this.findAdjacentSameValues();
+        
+        if (adjacentPairs.length > 0) {
+            alert('固定駒があります。');
+            
+            // 隣接する駒を固定する（独自のisFixedシステム使用）
+            this.fixAdjacentPieces(adjacentPairs);
+        }
+    }
+    
+    // 隣接する駒を固定する処理
+    fixAdjacentPieces(adjacentPairs) {
+        console.log('固定対象のペア:', adjacentPairs);
+        adjacentPairs.forEach(pair => {
+            // 両方の位置の駒を固定状態にする
+            this.fixTileAt(pair.pos1.x, pair.pos1.y);
+            this.fixTileAt(pair.pos2.x, pair.pos2.y);
+            console.log(`ペア固定: (${pair.pos1.x},${pair.pos1.y}) と (${pair.pos2.x},${pair.pos2.y}) 値:${pair.value}`);
+        });
+        
+        // 画面を再描画
+        this.drawGame();
+    }
+    
+    // 指定位置の駒を固定する
+    fixTileAt(x, y) {
+        if (this.tiles) {
+            const tile = this.tiles.find(t => t.x === x && t.y === y);
+            if (tile) {
+                tile.isFixed = true;
+                console.log(`駒を固定: 位置(${x},${y}) 値:${tile.value}`);
+            } else {
+                console.log(`固定対象の駒が見つかりません: 位置(${x},${y})`);
+            }
+        } else {
+            console.log('tilesが初期化されていません');
+        }
+    }
+
     // 手数をリセット
+    // 初期配置の隣接チェック機能（警告のみ）
+    performInitialAdjacencyCheck() {
+        if (!this.mapData) {
+            console.log('mapDataが存在しません');
+            return;
+        }
+        
+        const adjacentPairs = this.findAdjacentSameValues();
+        
+        if (adjacentPairs.length > 0) {
+            const pairStrings = adjacentPairs.map(pair => 
+                `位置(${pair.pos1.x},${pair.pos1.y})と(${pair.pos2.x},${pair.pos2.y})の数字${pair.value}`
+            ).join('\n');
+            
+            const message = `⚠️ 同じ数字が隣接している箇所があります:\n\n${pairStrings}\n\nこれらの駒は最初から固定状態になっています。`;
+            
+            alert(message);
+        }
+    }
+    
+    // 隣接する同じ値のペアを検索（UI上の斜め方向のみ = 配列上の上下左右）
+    findAdjacentSameValues() {
+        const adjacentPairs = [];
+        // ★UI上の斜め方向（移動可能方向）= 配列上の上下左右
+        const directions = [
+            [-1, 0], [1, 0], [0, -1], [0, 1]
+        ];
+        
+        for (let y = 0; y < this.mapData.length; y++) {
+            for (let x = 0; x < this.mapData[y].length; x++) {
+                const currentValue = this.mapData[y][x];
+                if (currentValue >= 999) continue; // 空のセルをスキップ
+                
+                // 各方向をチェック
+                for (const [dx, dy] of directions) {
+                    const newX = x + dx;
+                    const newY = y + dy;
+                    
+                    // 境界チェック
+                    if (newY >= 0 && newY < this.mapData.length && 
+                        newX >= 0 && newX < this.mapData[newY].length) {
+                        
+                        const adjacentValue = this.mapData[newY][newX];
+                        
+                        // 同じ値で、まだペアとして記録されていない場合
+                        if (currentValue === adjacentValue && currentValue < 999) {
+                            // 重複チェック（既に逆方向でペアが記録されていないか）
+                            const alreadyExists = adjacentPairs.some(pair => 
+                                (pair.pos1.x === newX && pair.pos1.y === newY && 
+                                 pair.pos2.x === x && pair.pos2.y === y) ||
+                                (pair.pos1.x === x && pair.pos1.y === y && 
+                                 pair.pos2.x === newX && pair.pos2.y === newY)
+                            );
+                            
+                            if (!alreadyExists) {
+                                adjacentPairs.push({
+                                    value: currentValue,
+                                    pos1: { x, y },
+                                    pos2: { x: newX, y: newY }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return adjacentPairs;
+    }
+
     resetMoveCount() {
         this.moveCount = 0;
         this.updateMoveDisplay();
@@ -721,6 +1006,12 @@ class DOGame {
         if (!this.heldTile) {
             const tile = this.getTileAt(cx, cy, false, true);
             if (tile) {
+                // ★固定されている駒（isFixedシステム）は選択できない
+                if (tile.isFixed) {
+                    console.log(`固定された駒は動かせません: 位置(${tile.x},${tile.y}) 値:${tile.value}`);
+                    return;
+                }
+                
                 this.heldTile = { ...tile };
                 this.heldTileMousePos = [cx, cy];
                 this.selectedTileValue = tile.value;
@@ -821,9 +1112,10 @@ class DOGame {
     
     updateMouseRuRuAfterMove(x, y) {
         if (this.mapData[y][x] >= 999) return;
+        // ★ダイヤモンド型ボードでは、UI上の斜め方向（移動可能方向）= 配列上の上下左右
         const dirs = [
-            { dx: 0, dy: -1 }, { dx: 1, dy: 0 },
-            { dx: 0, dy: 1 }, { dx: -1, dy: 0 }
+            { dx: -1, dy: 0 }, { dx: 1, dy: 0 },
+            { dx: 0, dy: -1 }, { dx: 0, dy: 1 }
         ];
         for (const dir of dirs) {
             const nx = x + dir.dx, ny = y + dir.dy;
@@ -833,8 +1125,18 @@ class DOGame {
                 this.mapData[ny][nx] < 999 &&
                 this.mapData[y][x] === this.mapData[ny][nx]
             ) {
-                if (this.mouseRuRu[y][x] === 0) { this.mouseRuRu[y][x] = 1; this.sumMouseRuRu++; }
-                if (this.mouseRuRu[ny][nx] === 0) { this.mouseRuRu[ny][nx] = 1; this.sumMouseRuRu++; }
+                // ★isFixedで固定されている駒はmouseRuRuシステムの対象外にする
+                const currentTile = this.tiles.find(t => t.x === x && t.y === y);
+                const adjacentTile = this.tiles.find(t => t.x === nx && t.y === ny);
+                
+                if (!currentTile?.isFixed && this.mouseRuRu[y][x] === 0) { 
+                    this.mouseRuRu[y][x] = 1; 
+                    this.sumMouseRuRu++; 
+                }
+                if (!adjacentTile?.isFixed && this.mouseRuRu[ny][nx] === 0) { 
+                    this.mouseRuRu[ny][nx] = 1; 
+                    this.sumMouseRuRu++; 
+                }
             }
         }
     }
@@ -893,9 +1195,9 @@ class DOGame {
         
         // 自動レベルアップ
         if (currentLevel < 10) {
-            const nextLevelIndex = currentLevel;
-            this.elements.levelSelect.selectedIndex = nextLevelIndex;
-            this.selectedLevel = nextLevelIndex + 3;
+            const nextLevelIndex = currentLevel; // レベル1→nextLevelIndex=1（HTML value="1"）
+            this.elements.levelSelect.selectedIndex = nextLevelIndex + 3; // Createオプション分をオフセット
+            this.selectedLevel = nextLevelIndex; // 0, 1, 2, ... として設定
         }
         
         this.showScreen('end');
@@ -1000,6 +1302,39 @@ class DOGame {
             alert('記録を削除しました！');
         }
     }
+
+    // クリエイトページを開く
+    openCreatePage() {
+        window.open('create.html', '_blank');
+    }
 }
 
-document.addEventListener('DOMContentLoaded', () => { new DOGame(); });
+document.addEventListener('DOMContentLoaded', () => { 
+    const game = new DOGame(); 
+    
+    // カスタムパズルまたはCreateレベルが選択された場合
+    const selectedLevel = localStorage.getItem('selectedLevel');
+    const customPuzzleData = localStorage.getItem('customPuzzle');
+    
+    if (selectedLevel === 'custom' && customPuzzleData) {
+        console.log('Createレベルが検出されました。直接ゲームを開始します。');
+        
+        // レベル選択をCreateに設定
+        game.elements.levelSelect.value = 'custom';
+        game.selectedLevel = 'custom';
+        
+        // 年齢選択をスキップしてゲームを開始
+        game.ageGroup = 'adult'; // デフォルトで成人に設定
+        game.adsEnabled = true;
+        game.timerEnabled = true;
+        
+        // 年齢選択画面を非表示にしてゲームを開始
+        game.showScreen('game');
+        game.initializeGame();
+        game.startTimer();
+        game.resetMoveCount();
+        
+        // 使用後はフラグをクリア
+        localStorage.removeItem('selectedLevel');
+    }
+});
