@@ -831,10 +831,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
+        // 実際に配置された駒の種類と数を計算
+        const pieceTypes = new Set();
+        const pieceCounts = {};
+        
+        for (let y = 0; y < size; y++) {
+            for (let x = 0; x < size; x++) {
+                if (board[y] && board[y][x]) {
+                    const pieceValue = board[y][x].value;
+                    pieceTypes.add(pieceValue);
+                    pieceCounts[pieceValue] = (pieceCounts[pieceValue] || 0) + 1;
+                }
+            }
+        }
+        
+        // クリア条件を動的に設定（配置された駒の種類数 = 必要な隣接グループ数）
+        const requiredGroups = pieceTypes.size;
+        
+        console.log('配置された駒の種類:', Array.from(pieceTypes));
+        console.log('各駒の数:', pieceCounts);
+        console.log('必要な隣接グループ数:', requiredGroups);
+
         const puzzleData = {
             size: size,
             board: board,
-            colorMode: !inputColorRandom.checked
+            colorMode: !inputColorRandom.checked,
+            requiredGroups: requiredGroups, // 動的クリア条件を追加
+            pieceCounts: pieceCounts // 駒の数も保存
         };
         
         console.log('保存するパズルデータ:', puzzleData);
