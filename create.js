@@ -414,9 +414,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 駒の数を表示（2個以上ある場合のみ個数表示）
             if (currentCount > 1) {
-                piece.innerHTML = `<span style="font-size: 18px; font-weight: bold;">${i}</span> <span style="font-size: 12px;">×${currentCount}</span>`;
+                // 二桁の数字の場合はフォントサイズを調整
+                const numberFontSize = i >= 10 ? '14px' : '18px';
+                const countFontSize = i >= 10 ? '10px' : '12px';
+                piece.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; line-height: 1;">
+                    <span style="font-size: ${numberFontSize}; font-weight: bold;">${i}</span>
+                    <span style="font-size: ${countFontSize};">×${currentCount}</span>
+                </div>`;
             } else {
-                piece.innerHTML = `<span style="font-size: 18px; font-weight: bold;">${i}</span>`;
+                const numberFontSize = i >= 10 ? '14px' : '18px';
+                piece.innerHTML = `<span style="font-size: ${numberFontSize}; font-weight: bold;">${i}</span>`;
             }
             
             if (inputColorRandom && inputColorRandom.checked) {
@@ -889,16 +896,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (mainMap) {
+        // タッチジェスチャー検出用の変数
+        let touchStartTime = 0;
+        let initialTouchDistance = 0;
+        let lastTouchX = 0;
+        let lastTouchY = 0;
+        
         mainMap.addEventListener('click', handleMapClick);
         mainMap.addEventListener('touchstart', (e) => {
-            e.preventDefault();
+            touchStartTime = Date.now();
             const touch = e.touches[0];
-            const rect = mainMap.getBoundingClientRect();
-            const mouseEvent = {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            };
-            handleMapClick(mouseEvent);
+            lastTouchX = touch.clientX;
+            lastTouchY = touch.clientY;
+            
+            // 複数の指の場合はピンチズーム
+            if (e.touches.length === 2) {
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialTouchDistance = Math.sqrt(
+                    Math.pow(touch2.clientX - touch1.clientX, 2) +
+                    Math.pow(touch2.clientY - touch1.clientY, 2)
+                );
+                return; // ピンチズームは妨げない
+            }
+        });
+        
+        mainMap.addEventListener('touchmove', (e) => {
+            // 複数の指の場合はピンチズームを許可
+            if (e.touches.length === 2) {
+                return; // ピンチズームは妨げない
+            }
+            
+            const touch = e.touches[0];
+            const moveDistance = Math.sqrt(
+                Math.pow(touch.clientX - lastTouchX, 2) +
+                Math.pow(touch.clientY - lastTouchY, 2)
+            );
+            
+            // 大きな移動はスクロールとして扱う
+            if (moveDistance > 10) {
+                return; // スクロールを妨げない
+            }
+        });
+        
+        mainMap.addEventListener('touchend', (e) => {
+            // 複数の指の場合はピンチズーム
+            if (e.changedTouches.length > 1) {
+                return; // ピンチズームは妨げない
+            }
+            
+            const touchDuration = Date.now() - touchStartTime;
+            const touch = e.changedTouches[0];
+            const moveDistance = Math.sqrt(
+                Math.pow(touch.clientX - lastTouchX, 2) +
+                Math.pow(touch.clientY - lastTouchY, 2)
+            );
+            
+            // 短時間で小さな移動の場合のみタップとして扱う
+            if (touchDuration < 500 && moveDistance < 10) {
+                e.preventDefault();
+                const rect = mainMap.getBoundingClientRect();
+                const mouseEvent = {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                };
+                handleMapClick(mouseEvent);
+            }
         });
         
         // マウス位置追跡
@@ -910,6 +973,28 @@ document.addEventListener('DOMContentLoaded', () => {
             // 追従中の場合は再描画
             if (isFollowing) {
                 drawDiamondMap();
+            }
+        });
+        
+        // タッチ移動処理（駒追従用）
+        mainMap.addEventListener('touchmove', (e) => {
+            // 単一タッチで追従中の場合のみ処理
+            if (e.touches.length === 1 && isFollowing) {
+                const touch = e.touches[0];
+                const rect = mainMap.getBoundingClientRect();
+                mousePos.x = touch.clientX - rect.left;
+                mousePos.y = touch.clientY - rect.top;
+                
+                drawDiamondMap();
+                
+                // 小さな移動の場合のみpreventDefault
+                const moveDistance = Math.sqrt(
+                    Math.pow(touch.clientX - lastTouchX, 2) +
+                    Math.pow(touch.clientY - lastTouchY, 2)
+                );
+                if (moveDistance < 10) {
+                    e.preventDefault();
+                }
             }
         });
         
